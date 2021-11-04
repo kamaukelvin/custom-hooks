@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import useFetch from "./hooks/useFetch";
+import useLocalStorage from './hooks/useLocalStorage'
 
 function App() {
+
+ 
+     const [item, setItem] = useLocalStorage("TEST", 123456)
+  
+
+  const {
+    data: todos,
+    loading,
+    error,
+    refetch,
+  } = useFetch("https://jsonplaceholder.typicode.com/todos");
+
+  if (loading) return <h1>Loading....</h1>;
+
+  if (error) console.log(error);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>{todos?.map((todo,i)=>(
+<li key={todo.id}>{todo.title}</li>
+      ))}</ul>
+      
+
+      <button onClick={()=>{refetch() ; setItem("testing", '12345')}}>Refetch</button>
     </div>
   );
 }
